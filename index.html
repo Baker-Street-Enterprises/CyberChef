@@ -23,10 +23,20 @@
 <!-- Begin Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-G9R4C1H8SR"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-G9R4C1H8SR');
+    const url = new URL(window.location.href);
+    window.addEventListener("apploaded", () => {
+        const uuid = url.searchParams.get('uuid');
+        const title = url.searchParams.get('title');
+        const authToken = url.searchParams.get('authToken')
+        if(uuid !== null) {
+           fetch(`http://127.0.0.1:9906/v1/content/raw?Uuid=${uuid}&AuthToken=${authToken}`)
+              .then( res => res.blob() )
+              .then( blob => {
+              const aFile = new File([blob], title);
+                 app.manager.input.loadUIFiles([aFile]);
+              });
+        }
+    });
 </script>
 <!-- End Google Analytics -->
 
